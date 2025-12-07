@@ -4,20 +4,27 @@ import (
 	"log"
 	"net/http"
 	"net/http/httputil"
-	"net/url"
+	"go-ml-router/pkg/config"
 )
 
 func main() {
-	target, err := url.Parse("http://localhost:8080")
+	path := "router_config.yaml"
+
+	config, err := config.FromYaml(path)
+	if err != nil {
+		log.Fatalf("Failed to read config")
+	}
+
 	if err != nil {
 		log.Fatal("Failed to parse target url")
 }
-	proxy := httputil.NewSingleHostReverseProxy(target)
+	target := config.PrimaryBackend
+	proxy := httputil.NewSingleHostReverseProxy(target.Url())
 
 	director := proxy.Director
 	proxy.Director = func(r *http.Request) {
 		director(r)
-		log.Printf("Proxing %s %s -> %s", r.Method, r.URL.Path, target.Host)
+		log.Printf("Proxing %s %s -> %s", r.Method, r.URL.Path, target.Address)
 	}
 
 	http.Handle("/", proxy)
