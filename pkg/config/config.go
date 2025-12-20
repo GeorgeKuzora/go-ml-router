@@ -20,7 +20,7 @@ type App struct {
 }
 
 type Backend struct {
-	Address string `yaml:"host"`
+	Address string `yaml:"address"`
 }
 
 func (b Backend) Url() *url.URL {

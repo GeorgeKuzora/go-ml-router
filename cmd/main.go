@@ -8,16 +8,13 @@ import (
 )
 
 func main() {
-	path := "router_config.yaml"
+	path := "config.yaml"
 
 	config, err := config.FromYaml(path)
 	if err != nil {
 		log.Fatalf("Failed to read config")
 	}
 
-	if err != nil {
-		log.Fatal("Failed to parse target url")
-}
 	target := config.PrimaryBackend
 	proxy := httputil.NewSingleHostReverseProxy(target.Url())
 

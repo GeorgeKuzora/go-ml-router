@@ -1,0 +1,7 @@
+app:
+  host: "http://127.0.0.1"
+  port: 8081
+primaryBackend:
+  address: "http://127.0.0.1:8080"
+altBackend:
+  address: "http://127.0.0.1:8081"
