@@ -10,8 +10,7 @@ import (
 
 type Config struct {
 	App App `yaml:"app"`
-	PrimaryBackend Backend `yaml:"primaryBackend"`
-	AltBackend Backend `yaml:"altBackend"`
+	Backends []Backend `yaml:"backends"`
 }
 
 type App struct {
@@ -20,6 +19,8 @@ type App struct {
 }
 
 type Backend struct {
+	Name string `yaml:"name"`
+	Priority int `yaml:"priority"`
 	Address string `yaml:"address"`
 }
 

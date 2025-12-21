@@ -1,7 +1,10 @@
 app:
   host: "http://127.0.0.1"
-  port: 8081
-primaryBackend:
-  address: "http://127.0.0.1:8080"
-altBackend:
-  address: "http://127.0.0.1:8081"
+  port: 9000
+backends:
+  - name: "primary"
+    priority: 1
+    address: "http://127.0.0.1:8080"
+  - name: "secondary"
+    priority: 2
+    address: "http://127.0.0.1:8081"
