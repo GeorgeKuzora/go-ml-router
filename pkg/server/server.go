@@ -1,28 +1,34 @@
 package server
 
 import (
+	"fmt"
 	"go-ml-router/pkg/config"
 	"go-ml-router/pkg/proxy"
 	"log"
 	"net/http"
-	"time"
 )
 
-func Serve(config *config.App, proxyManager *proxy.ProxyManager) {
+type Server struct {
+	server *http.Server
+}
 
+func NewServer(proxyManager *proxy.ProxyManager, config *config.App) Server {
 	mux := http.NewServeMux()
-	mux.Handle("/predict", proxyManager.ProxyHandler())
+	mux.Handle(config.Routes.Predict, proxyManager.ProxyHandler())
 
-    // Start server
-    server := &http.Server{
-        Addr:         ":8080",
-        Handler:      mux,
-        ReadTimeout:  10 * time.Second,
-        WriteTimeout: 30 * time.Second,
-        IdleTimeout:  120 * time.Second,
-    }
+	server := &http.Server{
+	    Addr:         fmt.Sprintf(":%d", config.Port),
+	    Handler:      mux,
+	    ReadTimeout:  config.ReadTimeout(),
+	    WriteTimeout: config.WriteTimeout(),
+	    IdleTimeout:  config.IdleTimeout(),
+	}
 
-    log.Printf("Starting ML Proxy on %s", server.Addr)
-    err := server.ListenAndServe()
-    log.Fatal(err)
+	return Server{server: server}
+}
+
+func (s *Server) Serve() error {
+    log.Printf("Starting ML Proxy on %s", s.server.Addr)
+    err := s.server.ListenAndServe()
+    return err
 }

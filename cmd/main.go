@@ -22,5 +22,9 @@ func main() {
 
 	proxyManager := proxy.NewProxyManager(&router)
 
-	server.Serve(&config.App, &proxyManager)
+	s := server.NewServer(&proxyManager, &config.App)
+	err = s.Serve()
+	if err != nil {
+		log.Fatalf("Error in runtime")
+	}
 }

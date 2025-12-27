@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"go-ml-router/pkg/fs"
 	"net/url"
+	"time"
 
 	"gopkg.in/yaml.v3"
 )
@@ -16,6 +17,28 @@ type Config struct {
 type App struct {
 	Host string `yaml:"host"`
 	Port int `yaml:"port"`
+	Routes Routes `yaml:"routes"`
+	readTimeoutInSec int `yaml:"readTimeoutInSec"`
+	writeTimeoutInSec int `yaml:"writeTimeoutInSec"`
+	idleTimeoutInSec  int `yaml:"idleTimeoutInSec"`
+}
+
+func (a App) ReadTimeout() time.Duration {
+	return time.Duration(a.readTimeoutInSec) * time.Second
+}
+
+func (a App) WriteTimeout() time.Duration {
+	return time.Duration(a.writeTimeoutInSec) * time.Second
+}
+
+func (a App) IdleTimeout() time.Duration {
+	return time.Duration(a.idleTimeoutInSec) * time.Second
+}
+
+type Routes struct {
+	Predict string `yaml:"predict"`
+	Health string `yaml:"health"`
+	Metrics string `yaml:"metrics"`
 }
 
 type Backend struct {

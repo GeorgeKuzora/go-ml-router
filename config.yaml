@@ -1,6 +1,13 @@
 app:
   host: "http://127.0.0.1"
   port: 9000
+  routes:
+    predict: "/predict"
+    health: "/healthz"
+    metrics: "/metrics"
+  readTimeoutInSec: 10
+  writeTimeoutInSec: 30
+  idleTimeoutInSec: 120
 backends:
   - name: "primary"
     priority: 1
