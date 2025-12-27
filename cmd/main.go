@@ -1,10 +1,10 @@
 package main
 
 import (
-	"log"
-	"net/http"
-	"net/http/httputil"
 	"go-ml-router/pkg/config"
+	"go-ml-router/pkg/proxy"
+	"go-ml-router/pkg/server"
+	"log"
 )
 
 func main() {
@@ -15,17 +15,12 @@ func main() {
 		log.Fatalf("Failed to read config")
 	}
 
-	target := config.PrimaryBackend
-	proxy := httputil.NewSingleHostReverseProxy(target.Url())
-
-	director := proxy.Director
-	proxy.Director = func(r *http.Request) {
-		director(r)
-		log.Printf("Proxing %s %s -> %s", r.Method, r.URL.Path, target.Address)
+	router := proxy.NewRouter(config)
+	if err != nil {
+		log.Fatalf("Failed to start a router")
 	}
 
-	http.Handle("/", proxy)
+	proxyManager := proxy.NewProxyManager(&router)
 
-	log.Print("Starting ML proxi on port 8000")
-	http.ListenAndServe(":8000", nil)
+	server.Serve(&config.App, &proxyManager)
 }

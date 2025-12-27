@@ -13,8 +13,8 @@ type ProxyManager struct {
 	router *Router
 }
 
-func NewProxyManager(router *Router) *ProxyManager {
-	return &ProxyManager{
+func NewProxyManager(router *Router) ProxyManager {
+	return ProxyManager{
 		proxies: make(map[string]*httputil.ReverseProxy),
 		router: router,
 	}
@@ -78,7 +78,7 @@ func (pm *ProxyManager) ProxyHandler() http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusBadGateway)
 			return
 		}
-		
+
 		proxy.ServeHTTP(w, r)
 	}
 }
