@@ -40,7 +40,7 @@ func (pm *ProxyManager) GetProxy(backendKey string) (*httputil.ReverseProxy, err
 	if err != nil {
 		return nil, err
 	}
-	proxy = httputil.NewSingleHostReverseProxy(backendUrl)
+	proxy = httputil.NewSingleHostReverseProxy(&backendUrl)
 
 	proxy.Transport = &http.Transport{
 		MaxIdleConns: 100,
